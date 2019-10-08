@@ -4,9 +4,10 @@ import pandas as pd
 import easygui as eg
 
 
-# Class for taking 36 char DNA sequences out of FASTQ format and converting to a csv 
+# Class for taking DNA sequences out of FASTQ format and converting to a csv 
 # with counts for each unique sequence.
 class sequence_extractor():
+    # fileName: name of a csv file, path included
     # Initiate blank dicitionary, check that given file exists and is FASTQ
     def __init__(self, fileName):  
         self.fileName = fileName
@@ -17,8 +18,8 @@ class sequence_extractor():
         if self.fileName.split('.')[1] not in fastqFormats:
             raise SystemError("Error: File does not have FASTQ file extension\n")
     
-    # Extract each 36 char DNA sequence from FASTQ file, add each to dictionary
-    #  with the values being a count of each's occurrences
+    # Extract each DNA sequence from FASTQ file, add each to dictionary
+    # with the values being a count of each's occurrences
     def extract(self):
         with open(self.fileName) as fastq:  # Open file, store contents as fastq
             lines = []
