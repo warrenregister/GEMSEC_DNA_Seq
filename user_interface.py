@@ -29,7 +29,6 @@ class user_interface():
                 extractor.extract()
                 extractor.write_CSV()
         self.merge_directory(directory)
-        self.success_alert()
     
     # directory: Optional parameter to specifiy directory of CSVs to merge, by defualt calls 
     # easyGUI diropenbox() to get a directory.
