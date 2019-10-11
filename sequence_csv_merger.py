@@ -15,33 +15,25 @@ class sequence_csv_merger():
     def merge(self):  # Merge all CSVs in path into one DataFrame.
         all_csvs = glob.glob(self.path + '*.csv')  # List of all files in directory ending in .csv
         df_from_each_file = []  # list to contain each csv when it is converted to a DataFrame
-        for csv in all_csvs:
+        for count, csv in enumerate(all_csvs):
             df_from_each_file.append(pd.read_csv(csv))
-            self.csv_sizes.append(sum(1 for row in open(csv)))  # Get number of entries in CSV
+            self.csv_sizes.append(df_from_each_file[count].shape[0])  # Get number of entries in CSV
             self.csv_names.append(csv.split(self.path)[1].split('.')[0])  # Get name of CSV
-        self.concatenated_df   = pd.concat(df_from_each_file, ignore_index=True)
-
+        self.concatenated_df = df_from_each_file
 
     # Convert merged DataFrame to Dictionary, create a list to keep track of DNA sequence occurence
     # numbers for each CSV, and add extra column for total occurences of each sequence in all CSVs.
-    def sort_merged_csv(self):  
-        columns = list(self.concatenated_df)
+    def sort_merged_csv(self): 
         merged_dict = {}
-        count = 1  # count of row of current CSV
-        index = 0  # index of csv_sizes to keep track of which CSV is currently being worked on
         cols = len(self.csv_sizes) + 1  # num of cols represented in lists stored in merged dict
-        for sequence in self.concatenated_df[columns[0]]:
-            # if count = the current CSVs size, move on to the next set, reset count
-            if (self.csv_sizes[index] - count) <= 0: 
-                    index += 1
-                    count = 1
-            if sequence not in merged_dict:
-                merged_dict[sequence] = [0] * (cols)  # 1 col per CSV, 1 for total
-
-            merged_dict[sequence][index] += 1  # add 1 to col with current part of set
-            merged_dict[sequence][cols - 1] += 1  # add 1 to total set occurence count
-            count += 1
-            
+        for index, batch in enumerate(self.concatenated_df):
+            for count in range(self.csv_sizes[index]):
+                if batch['Unnamed: 0'][count] not in merged_dict:
+                    merged_dict[batch['Unnamed: 0'][count]] = [0] * (cols)  # 1 col per CSV, 1 for total
+                merged_dict[batch['Unnamed: 0'][count]][index] += batch['0'][count] 
+                merged_dict[batch['Unnamed: 0'][count]][cols - 1] += batch['0'][count] 
+                print('sequence: ' + str(count)+' ' + batch['Unnamed: 0'][count] + ": " + str(batch['0'][count])) 
+                
 
         self.dict = merged_dict
 
