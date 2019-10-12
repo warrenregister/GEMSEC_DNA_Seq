@@ -24,7 +24,7 @@ class user_interface():
     def convert_directory(self):
         directory = eg.diropenbox()
         for fileName in os.listdir(directory):
-            if fileName.split('.')[1] in ['fq', 'FASTQ', 'fastq']:
+            if fileName.split('.')[-1] in ['fq', 'FASTQ', 'fastq']:
                 extractor = sequence_extractor(directory + '/' + fileName)
                 extractor.extract()
                 extractor.write_CSV()

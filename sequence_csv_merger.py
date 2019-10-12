@@ -26,6 +26,7 @@ class sequence_csv_merger():
     def sort_merged_csv(self): 
         merged_dict = {}
         cols = len(self.csv_sizes) + 1  # num of cols represented in lists stored in merged dict
+
         for index, batch in enumerate(self.concatenated_df):
             for count in range(self.csv_sizes[index]):
                 if batch['Unnamed: 0'][count] not in merged_dict:
@@ -33,7 +34,7 @@ class sequence_csv_merger():
                 merged_dict[batch['Unnamed: 0'][count]][index] += batch['0'][count] 
                 merged_dict[batch['Unnamed: 0'][count]][cols - 1] += batch['0'][count] 
                 print('sequence: ' + str(count)+' ' + batch['Unnamed: 0'][count] + ": " + str(batch['0'][count])) 
-                
+
 
         self.dict = merged_dict
 
