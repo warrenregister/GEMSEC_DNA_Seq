@@ -8,9 +8,13 @@ from sequence_csv_merger import sequence_csv_merger
 # and merging multiple CSVs into 1 file.
 class user_interface():
     def __init__(self):  # Initiate user_interface, get user choice on action to perform
+        self.cont = True
+        self.reply = self.get_user_choice()
+
+    def get_user_choice(self):  # Set up easygui indexbox, ask user through indexbox for input
         choices = ['Open File', 'Open Folder', 'Merge CSVs in Folder']
         msg = 'Do you want to convert 1 file, a set of files, or merge a set of pre-existing CSVs?'
-        self.reply = eg.indexbox(msg, choices=choices)
+        return eg.indexbox(msg, choices=choices)
     
     def convert_single_file(self):  # Convert a user-chosen FASTQ file to CSV
         fileName = eg.fileopenbox(default = '*.fq')
@@ -27,27 +31,32 @@ class user_interface():
             if fileName.split('.')[-1] in ['fq', 'FASTQ', 'fastq']:
                 extractor = sequence_extractor(directory + '/' + fileName)
                 extractor.extract()
-                extractor.write_CSV()
-        self.merge_directory(directory)
-    
+                extractor.write_CSV() 
+        self.success_alert()
     # directory: Optional parameter to specifiy directory of CSVs to merge, by defualt calls 
     # easyGUI diropenbox() to get a directory.
     # Merges all csv files in a directory into 1 CSV, preserving all data from combined CSVs.
-    def merge_directory(self, directory=None):
-        if directory == None:
-            directory=eg.diropenbox()
+    def merge_directory(self):
+        directory=eg.diropenbox()
         merger = sequence_csv_merger(directory + '/')
-        merger.merge()
-        merger.sort_merged_csv()
+        merger.get_data()
+        merger.merge_data()
         merger.write_CSV() 
         self.success_alert()
     
 
+    # Display message upon succesfully completing a task, ask user if they want to keep using script.
     def success_alert(self):
         if self.reply == 0:
             msg = 'File succesfully converted!'
         elif self.reply == 1:
-            msg = 'Files succesfully converted and merged!'
+            msg = 'Files succesfully converted'
         else:
             msg = 'Files succesfully merged!'
-        eg.msgbox(msg=msg, title='Success')
+
+        self.cont = False
+        finished = eg.indexbox(msg=msg, title='Success', choices=['Continue', 'Done'])
+        if not finished:
+            self.reply = self.get_user_choice()
+            self.cont = True
+
