@@ -11,6 +11,7 @@ NGS data takes the form of FASTQ files. This repo contains code which takes thes
 
 
 TODO:
++ Store frequency of each type of nucleotide in CSV file formate (36 lines denoting each position, 4 columns denoting frequencies of each type of nucleotide A, T, G, C.
 + Total number of each type of nucleotide (ATGC) at each position in the barcodes (36 nucleotide dna segments)
 + Calculate frequency of each nucleotide in each position in each wash and set for an experiment
 + Total number of each type of amino acid at each slot in the peptides being studied (12 peptide slots)
