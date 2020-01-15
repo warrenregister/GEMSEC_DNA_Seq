@@ -16,10 +16,8 @@ class sequence_csv_merger():
         all_csvs = glob.glob(self.path + '*.csv')  # List of all files in directory ending in .csv
         df_from_each_file = []  # list to contain each csv when it is converted to a DataFrame
         for csv in all_csvs:
-            #df=pd.read_csv(csv)
-            df = self.csv_to_dataframe(csv)
-            df.columns=['DNA_seq', 'counts']
-            df.set_index('DNA_seq', inplace=True)
+            df=pd.read_csv(csv)
+            df.set_index('Unnamed: 0', inplace=True)
             df_from_each_file.append(df)
             self.csv_names.append(csv.split(self.path)[1].split('.')[0])  # Get name of CSV
         self.dfs = df_from_each_file
@@ -31,8 +29,7 @@ class sequence_csv_merger():
         merged_dict = pd.concat(self.dfs, axis=1, sort=False).fillna(value=0)
         merged_dict.columns = [x.split('_')[1] + ' ' + x.split('_')[2] for x in self.csv_names]
         set_name = self.csv_names[0].split('_')[0]
-        merged_dict[set_name] = merged_dict.sum(axis=1)
-        merged_dict[set_name] 
+        merged_dict[set_name] = merged_dict.sum(axis=1) 
         self.dict = merged_dict
 
 
