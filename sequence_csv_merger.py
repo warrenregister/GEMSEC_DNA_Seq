@@ -17,7 +17,8 @@ class sequence_csv_merger():
         df_from_each_file = []  # list to contain each csv when it is converted to a DataFrame
         for csv in all_csvs:
             df=pd.read_csv(csv)
-            df.set_index('Unnamed: 0', inplace=True)
+            df.columns=['DNA_seq', 'counts']
+            df.set_index('DNA_seq, inplace=True)
             df_from_each_file.append(df)
             self.csv_names.append(csv.split(self.path)[1].split('.')[0])  # Get name of CSV
         self.dfs = df_from_each_file
