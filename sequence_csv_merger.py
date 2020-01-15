@@ -16,8 +16,7 @@ class sequence_csv_merger():
         all_csvs = glob.glob(self.path + '*.csv')  # List of all files in directory ending in .csv
         df_from_each_file = []  # list to contain each csv when it is converted to a DataFrame
         for csv in all_csvs:
-            #df=pd.read_csv(csv)
-            df = self.csv_to_dataframe(csv)
+            df=pd.read_csv(csv)
             df.columns=['DNA_seq', 'counts']
             df.set_index('DNA_seq', inplace=True)
             df_from_each_file.append(df)
