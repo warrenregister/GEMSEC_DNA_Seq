@@ -2,6 +2,7 @@
 import os
 import pandas as pd
 import easygui as eg
+import itertools
 
 
 # Class for taking DNA sequences out of FASTQ format and converting to a csv 
