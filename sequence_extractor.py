@@ -4,6 +4,7 @@ import pandas as pd
 import easygui as eg
 from nucleotide_counter import nucleotide_counter
 from amino_acid_counter import amino_acid_counter
+import itertools
 
 
 # Class for taking DNA sequences out of FASTQ format and converting to a csv 
@@ -24,19 +25,17 @@ class sequence_extractor():
     # with the values being a count of each's occurrences
     def extract(self):
         with open(self.fileName) as fastq:  # Open file, store contents as fastq
-            lines = []
-            self.nuc_counter = nucleotide_counter(self.fileName.split('.')[0])
-            self.amino_counter = amino_acid_counter(self.fileName.split('.')[0])
-            for line in fastq:
-                lines.append(line.rstrip())  # Add line to list, remove trailing spaces
-                if len(lines) == 4:  # Every 4 lines, add a DNA sequence to dictionary
-                    if lines[1] not in self.seqs:
-                        self.seqs[lines[1]] = 1
-                    else:
-                        self.seqs[lines[1]] += 1
-                    self.nuc_counter.add_barcode(lines[1])
-                    self.amino_counter.add_barcode(lines[1])
-                    lines = []
+            self.nuc_counter = nucleotide_counter()
+            self.amino_counter = amino_acid_counter()
+            for line in itertools.islice(fastq, 1, None, 4): # Gets only the DNA sequences from the fastq file (start = 1, stop = None, step = 4)
+                if line not in self.seqs:
+                    self.seqs[line] = 1
+                else:
+                    self.seqs[line] += 1
+                self.nuc_counter(line)
+                self.amino_counter(line)
+                
+                
 
 
     def write_CSV(self):  # Write dictionary of DNA sequences to a csv file
