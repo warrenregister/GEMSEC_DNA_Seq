@@ -25,15 +25,15 @@ class sequence_extractor():
     # with the values being a count of each's occurrences
     def extract(self):
         with open(self.fileName) as fastq:  # Open file, store contents as fastq
-            self.nuc_counter = nucleotide_counter()
-            self.amino_counter = amino_acid_counter()
+            self.nuc_counter = nucleotide_counter(self.fileName)
+            self.amino_counter = amino_acid_counter(self.fileName)
             for line in itertools.islice(fastq, 1, None, 4): # Gets only the DNA sequences from the fastq file (start = 1, stop = None, step = 4)
                 if line not in self.seqs:
                     self.seqs[line] = 1
                 else:
                     self.seqs[line] += 1
-                self.nuc_counter(line)
-                self.amino_counter(line)
+                self.nuc_counter.add_barcode(line)
+                self.amino_counter.add_barcode(line)
                 
                 
 
