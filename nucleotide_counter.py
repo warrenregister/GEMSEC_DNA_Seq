@@ -8,12 +8,11 @@ class nucleotide_counter():
         self.nucleotides = pd.DataFrame(columns=columns, index=index)
         self.nucleotides.fillna(0)
         self.name = file_name
-        for num in range(36):
-            self.nucleotides.append([0,0,0,0])
     
     def add_barcode(self, barcode):
         for position, nucleotide in enumerate(barcode):
-            self.nucleotides[nucleotide][position] += 1
+            if nucleotide != '\n':
+                self.nucleotides[nucleotide][position] += 1
     
     def write_csv(self):
-        self.nucleotides.to_csv(self.name + '_nuc_counts.csv')
+        self.nucleotides.to_csv('./nuc_counts/' + self.name + '_nuc_counts.csv')

@@ -9,8 +9,6 @@ class amino_acid_counter():
         self.amino_acids = pd.DataFrame(columns=acids, index=index)
         self.amino_acids.fillna(0)
         self.amino_acids.columns = acids
-        for num in range(len(acids)):
-            self.amino_acids.append(pd.Series(0, index=self.amino_acids.columns), ignore_index=True)
     
     def add_barcode(self, seq):
         peptide = translate(seq)
@@ -18,4 +16,4 @@ class amino_acid_counter():
             self.amino_acids[acid][position] += 1
     
     def write_csv(self):
-        self.amino_acids.to_csv(self.name + '_amino_acid_counts.csv')
+        self.amino_acids.to_csv('./amino_counts/' + self.name + '_amino_acid_counts.csv')

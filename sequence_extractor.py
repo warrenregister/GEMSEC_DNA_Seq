@@ -39,6 +39,8 @@ class sequence_extractor():
 
 
     def write_CSV(self):  # Write dictionary of DNA sequences to a csv file
+        os.mkdir('./nuc_counts')
+        os.mkdir('./amino_counts')
         CSV = pd.DataFrame.from_dict(self.seqs, orient='index')
         CSV.to_csv(self.fileName.split('.')[0]+'.csv')
         self.nuc_counter.write_csv()
