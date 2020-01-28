@@ -17,4 +17,4 @@ class nucleotide_counter():
                 self.nucleotides[nucleotide][position] += 1
     
     def write_csv(self):
-        self.nucleotides.to_csv('./FASTQ_files/fakeFASTQ/nuc_counts/' + self.name.split('.')[0] + '_nuc_counts.csv')
+        self.nucleotides.to_csv('./FASTQfiles/fakeFASTQ/nucCounts/' + self.name.split('.')[0] + '_nuc_counts.csv')

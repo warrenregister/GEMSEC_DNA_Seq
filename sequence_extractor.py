@@ -37,13 +37,13 @@ class sequence_extractor():
                 
                 
     def write_CSV(self):  # Write dictionary of DNA sequences to a csv file
-        if not os.path.exists("./FASTQ_files/fakeFASTQ/nuc_counts"):
-            os.mkdir('./FASTQ_files/fakeFASTQ/nuc_counts')
-        if not os.path.exists('./FASTQ_files/fakeFASTQ/amino_counts'):
-            os.mkdir('./FASTQ_files/fakeFASTQ/amino_counts')
+        if not os.path.exists("./FASTQfiles/fakeFASTQ/nucCounts"):
+            os.mkdir('./FASTQfiles/fakeFASTQ/nucCounts')
+        if not os.path.exists('./FASTQfiles/fakeFASTQ/aminoCounts'):
+            os.mkdir('./FASTQfiles/fakeFASTQ/aminoCounts')
             
         CSV = pd.DataFrame.from_dict(self.seqs, orient='index')
-        CSV.to_csv(self.fileName.split('.')[0]+'.csv')
+        CSV.to_csv('./'+self.fileName.split('.')[1]+'.csv')
         self.nuc_counter.write_csv()
         self.amino_counter.write_csv()
 
