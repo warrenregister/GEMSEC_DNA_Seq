@@ -30,14 +30,16 @@ def translate(seq):
     'TAC':'Y', 'TAT':'Y', 'TAA':'_', 'TAG':'Q',
     'TGC':'C', 'TGT':'C', 'TGA':'_', 'TGG':'W',}
 
+    '''
     ncontain = [''.join(x) for x in it.product('ACTGN',repeat=3)]
     correct = [''.join(x) for x in it.product('ACTG',repeat=3)]
     rejects=list(set(ncontain)-set(correct))
+    '''
     peptide = ""
-    if len(seq)%3 == 0:
+    if (len(seq)-1)%3 == 0:
         for i in range(0, len(seq), 3):
             codon = seq[i : i+3]
-            if codon in rejects:
+            if codon == '\n':
                 break
             else:
                 peptide += table[codon]

@@ -3,7 +3,7 @@ from translation import translate
 
 class amino_acid_counter():
     def __init__(self, file_name):
-        self.name = file_name
+        self.name = file_name.split('/')[-1]
         index = range(12)
         acids = ['I','M','T','N','K','S','R','L','P','H','Q','V','A','D','E','G','F','Y','C','_','W']
         self.amino_acids = pd.DataFrame(columns=acids, index=index)
@@ -16,4 +16,4 @@ class amino_acid_counter():
             self.amino_acids[acid][position] += 1
     
     def write_csv(self):
-        self.amino_acids.to_csv('./amino_counts/' + self.name + '_amino_acid_counts.csv')
+        self.amino_acids.to_csv('./FASTQ_files/fakeFASTQ/amino_counts/' + self.name.split('.')[1] + '_amino_acid_counts.csv')

@@ -6,7 +6,8 @@ from sequence_csv_merger import sequence_csv_merger
 # Prompt user for whether they want to convert 1 FASTQ file, convert a folder of FASTQ files,
 # or merge a folder of CSVs (previously converted from FASTQ) into 1 CSV
 def main():
-    directory = sys.argv[1] # uses the given directory (1st command line arg) to look at the FASTQ files
+    #directory = sys.argv[1] # uses the given directory (1st command line arg) to look at the FASTQ files
+    directory = './FASTQ_files/fakeFASTQ/'
     print("Extracting files from " + directory + " directory...")
     for fileName in os.listdir(directory):
             if fileName.split('.')[-1] in ['fq', 'FASTQ', 'fastq']:

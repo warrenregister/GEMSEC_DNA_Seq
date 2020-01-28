@@ -20,7 +20,7 @@ class sequence_csv_merger():
             df.columns=['DNA_seq', 'counts']
             df.set_index('DNA_seq', inplace=True)
             df_from_each_file.append(df)
-            self.csv_names.append(csv.split(self.path)[1].split('.')[0])  # Get name of CSV
+            self.csv_names.append(csv.split('.')[0])  # Get name of CSV
         self.dfs = df_from_each_file
 
     # Merge DataFrames together into 1 DataFrame with DNA sequences as index, create 
@@ -39,10 +39,3 @@ class sequence_csv_merger():
     def write_CSV(self, name='totals'):
         self.dict.to_csv(self.path + '/' + name + '.csv')
 
-    def csv_to_dataframe(self, file):
-        with open(file) as csvfile:  
-            data = csv.DictReader(csvfile)
-            dict = {}
-            for row in data:
-                dict[row['']] = row['0']
-            return pd.DataFrame.from_dict(dict, orient='index')
