@@ -28,7 +28,7 @@ class sequence_csv_merger():
     # counts across all DataFrames for each sequence.
     def merge_data(self): 
         merged_dict = pd.concat(self.dfs, axis=1, sort=False).fillna(value=0)
-        merged_dict.columns = [x.split('_')[1] + ' ' + x.split('_')[2] for x in self.csv_names]
+        merged_dict.columns = [x for x in self.csv_names]
         set_name = self.csv_names[0].split('_')[0]
         merged_dict[set_name] = merged_dict.sum(axis=1) 
         self.dict = merged_dict
@@ -37,5 +37,5 @@ class sequence_csv_merger():
     # name: optional parameter to give merged CSV a specific name
     # Convert dictionary to DataFrame and write it to a CSV file
     def write_CSV(self, name='totals'):
-        self.dict.to_csv(self.path + '/' + name + '.csv')
+        self.dict.to_csv(self.path + name + '.csv')
 
