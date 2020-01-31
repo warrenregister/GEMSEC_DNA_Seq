@@ -1,5 +1,8 @@
 # Author: Nitya Krishna Kumar
 
+import numpy as np
+import matplotlib.pyplot as plt
+
 #-- Accounting for Total Population -------------------------------------------------------------
 
 # One Hot Encodes a DNA Sequence
