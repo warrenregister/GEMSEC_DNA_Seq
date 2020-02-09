@@ -28,6 +28,7 @@ class sequence_extractor():
                     self.seqs[line] = 1
                 else:
                     self.seqs[line] += 1
+        return(pd.DataFrame.from_dict(self.seqs, orient='index'))
                 
     def write_CSV(self, path):  # Write dictionary of DNA sequences to a csv file
         

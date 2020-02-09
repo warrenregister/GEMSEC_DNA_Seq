@@ -15,19 +15,19 @@ def main():
         if os.path.exists(directory+'/CSV/'+totals_name+'.csv'):
             os.remove(directory+'/CSV/'+totals_name+'.csv')
     print("Extracting files from " + directory + " directory...")
+    extracted_docs = []
     for fileName in os.listdir(directory):
         if fileName.split('.')[-1] in ['fq', 'FASTQ', 'fastq']:
             extractor = sequence_extractor(directory + '/' + fileName)
-            extractor.extract()
-            print("Files extracted, converting files to CSV format...")
-            extractor.write_CSV(directory + '/CSV/')
+            extracted_docs.append(extractor.extract())
+            print("Files extracted...")
     
     merger = sequence_csv_merger(directory + '/CSV/')
     merger.get_data()
     merger.merge_data()
     merger.write_CSV(name = totals_name)
 
-    while not os.path.exists(directory+'/CSV/'+totals_name+'.csv'):
+    while not os.path.exists(directory +'/CSV/'+totals_name+'.csv'):
         time.sleep(1)
     
     
