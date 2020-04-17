@@ -9,22 +9,24 @@ class sequence_csv_merger():
     def __init__(self, path, files):
         self.files = files
         self.path = path
-        self.csv_names = [('wash' + num) for num, _ in enumerate(files)]
+        self.csv_names = [('wash' + str(num)) for num, _ in enumerate(files)]
         self.csv_names[-1] = 'eluate'
 
     # Merge DataFrames together into 1 DataFrame with DNA sequences as index, create 
     # separate columns per counts of each DataFrame, create a column for total 
     # counts across all DataFrames for each sequence.
-    def merge_data(self, set_num = 1): 
+    def merge_data(self, wash_num = 1):
         merged_dict = pd.concat(self.files, axis=1, sort=False).fillna(value=0)
         merged_dict.columns = [x for x in self.csv_names]
-        set_name = 'set_' + set_num
-        merged_dict[set_name] = merged_dict.sum(axis=1) 
+        merged_dict['total_occurences'] = merged_dict.sum(axis=1) 
+        merged_dict.reset_index(inplace=True)
+        merged_dict.rename(columns={'index':'sequence', '0':'index'}, inplace=True)
         self.df = merged_dict
+        return(merged_dict)
 
 
     # name: optional parameter to give merged CSV a specific name
     # Convert dictionary to DataFrame and write it to a CSV file
     def write_CSV(self, name='totals'):
-        self.df.to_csv(self.path + '/CSV/' + name + '.csv')
+        self.df.to_csv(self.path + name + '.csv')
 
