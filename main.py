@@ -1,16 +1,28 @@
-from user_interface import user_interface
+import os
+import sys
+import time
+import pandas as pd
+from EntropyPlotter import EntropyPlotter
+from extractor_helpers import extract_csvs
+from SequenceMerger import SequenceMerger
 
-# Prompt user for whether they want to convert 1 FASTQ file, convert a folder of FASTQ files,
-# or merge a folder of CSVs (previously converted from FASTQ) into 1 CSV
+
 def main():
-    gui = user_interface()
-    while gui.cont:
-        if gui.reply == 0:  # User chose to convert 1 file
-            gui.convert_single_file()
-        elif gui.reply == 1:  # User chose to convert a folder of files
-            gui.convert_directory()
-        else:  # User chose to merge a set of files
-            gui.merge_directory()
+    directory = '/Users/warren/Desktop/docs/GEMSEC_DNA_Seq/FASTQfiles/realFASTQ'
+    #directory = sys.argv[1] # uses the given directory (1st command line arg) to look at the FASTQ file
+
+    dfs = extract_csvs(directory) # Dict of each set's extracted FASTQ files
+    
+    sets = []
+    for set_num in dfs.keys():
+        merger = SequenceMerger(directory , dfs[set_num])
+        sets.append(merger.merge_data())
+
+    entropy_calculator = EntropyPlotter(sets)
+    entropy_calculator.split_sets()
+    entropy_calculator.calc_entropy()
+    entropy_calculator.plots()
 
 
-main()
+if __name__ == '__main__':
+    main()
