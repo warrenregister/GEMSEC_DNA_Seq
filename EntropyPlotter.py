@@ -34,9 +34,9 @@ class EntropyPlotter():
         witch each combination of washes per each set.
         '''
         for setnum, dataset in enumerate(self._sets):
-            sampling_tuple = self._split_set(dataset)
-            wash_combs = self._sample_datasets(sampling_tuple[0], sampling_tuple[1])
-            comb_names = self._name_wash_combs(wash_combs)
+            sampling_tuple = self.split_set(dataset)
+            wash_combs = self.sample_datasets(sampling_tuple[0], sampling_tuple[1])
+            comb_names = self.name_wash_combs(wash_combs)
             for index, wash in enumerate(wash_combs):
                 self._data['Set' + str(setnum + 1)][comb_names[index]] = wash
 
@@ -70,13 +70,13 @@ class EntropyPlotter():
         for dataset in self._data.keys():
             for wash_comb in self._data[dataset].keys():
                 self._total_entropy[dataset][wash_comb] = self._entropy_function(
-                        self._generate_matrices(
+                        self.generate_matrices(
                         self._data[dataset][wash_comb])).sum()/12
     
 
     def plots(self):
-        self._plot1(self._total_entropy, 'test_plot1')
-        self._plot2(self._total_entropy, 'test_plot2')
+        self.plot1(self._total_entropy, 'test_plot1')
+        self.plot2(self._total_entropy, 'test_plot2')
     
 
     @staticmethod
@@ -107,10 +107,12 @@ class EntropyPlotter():
         min_size = len(a_set)
 
         for index, _ in enumerate(washes):
-            filtered_datasets[index] = filtered_datasets[index].loc[filtered_datasets[index][washes[index]] > 0]
+            filtered_datasets[index] = filtered_datasets[index].loc[
+                filtered_datasets[index][washes[index]] > 0]
             filtered_datasets.append(filtered_datasets[index])
             for wash in washes[index + 1:]: 
-                filtered_datasets[index] = filtered_datasets[index].loc[filtered_datasets[index][wash] == 0]
+                filtered_datasets[index] = filtered_datasets[index].loc[
+                    filtered_datasets[index][wash] == 0]
             size = len(filtered_datasets[index].index)
             if size < min_size:
                 min_size = size
@@ -175,7 +177,7 @@ class EntropyPlotter():
         seqs = data.sequence
         data.drop('sequence', axis=1, inplace = True)
         for count, seq in enumerate(seqs): 
-            onehot_encoded = self._one_hotter(seq)
+            onehot_encoded = self.one_hotter(seq)
             sum += onehot_encoded * data['mult'].iloc[count]
         return(np.matrix(sum))
 
