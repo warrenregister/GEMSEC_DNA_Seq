@@ -5,3 +5,8 @@ CSV
 NGS1_MoS2-master
 Enrich2-master
 *.csv
+Database
+NGS
+.ipynb_checkpoints
+.Rhistory
+FASTQfiles/
