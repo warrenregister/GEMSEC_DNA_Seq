@@ -8,14 +8,14 @@ from SequenceMerger import SequenceMerger
 
 
 def main():
-    directory = '/Users/warren/Desktop/docs/GEMSEC_DNA_Seq/FASTQfiles/realFASTQ'
+    directory = '/Users/warren/Documents/GEMSEC_DNA_Seq/FASTQfiles/realFASTQ'
     #directory = sys.argv[1] # uses the given directory (1st command line arg) to look at the FASTQ file
 
     dfs = extract_csvs(directory) # Dict of each set's extracted FASTQ files
     
     sets = []
     for set_num in dfs.keys():
-        merger = SequenceMerger(directory , dfs[set_num])
+        merger = SequenceMerger(directory , dfs[set_num], False)
         sets.append(merger.merge_data())
 
     entropy_calculator = EntropyPlotter(sets)

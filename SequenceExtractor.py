@@ -20,7 +20,7 @@ class SequenceExtractor():
         '''
         self._fileNames = list(files)
         self._seqs = {}
-        for fileName in self.fileNames:
+        for fileName in self._fileNames:
             if not os.path.exists(fileName):  # Check if given file is real
                 raise SystemError("Error: File does not exist\n")
             fastqFormats = ['fq', 'FASTQ', 'fastq']  # Check if a file is the proper format
@@ -37,7 +37,7 @@ class SequenceExtractor():
         for fileName in self._fileNames:
             with open(fileName) as fastq:  # Open file, store contents as fastq
                 for line in itertools.islice(fastq, 1, None, 4): # Gets only the DNA sequences from the fastq file (start = 1, stop = None, step = 4)
-                    if line not in self.seqs:
+                    if line not in self._seqs:
                         self._seqs[line] = 1
                     else:
                         self._seqs[line] += 1
@@ -52,4 +52,3 @@ class SequenceExtractor():
             print("CSV path: "+path+fileName.split('/')[-1].split('.')[0]+'.csv')
             CSV = pd.DataFrame.from_dict(self._seqs, orient='index')
             CSV.to_csv(path+fileName.split('/')[-1].split('.')[0]+'.csv')
-

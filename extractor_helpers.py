@@ -1,4 +1,4 @@
-from sequence_extractor import SequenceExtractor
+from SequenceExtractor import SequenceExtractor
 import os
 import pandas as pd
 

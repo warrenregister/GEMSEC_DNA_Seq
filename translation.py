@@ -44,4 +44,3 @@ def translate(seq):
             else:
                 peptide += table[codon]
     return peptide
-        

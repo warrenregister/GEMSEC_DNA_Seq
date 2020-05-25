@@ -7,7 +7,7 @@ class SequenceMerger():
     with columns for each CSVs DNA sequence occurence count, and 1 more column for
     total occurence counts.
     '''
-    def __init__(self, path:str, files:list):
+    def __init__(self, path:str, files:list, totals):
         '''
         Initiate sequence_csv_merger w/ empty csv_sizes list
         path: a path to a directory in which to save the merged file
@@ -18,6 +18,7 @@ class SequenceMerger():
         self._path = path
         self._csv_names = [('wash' + str(num)) for num, _ in enumerate(files)]
         self._csv_names[-1] = 'eluate'
+        self.totals=totals
 
 
 
@@ -27,15 +28,10 @@ class SequenceMerger():
         create separate columns per counts of each DataFrame, create a column 
         for total counts across all DataFrames for each sequence.
         '''
-        if self._files[0] == str :
-            dfs = []
-            for csv in self._files:
-                if csv[-3:-1] == 'csv':
-                    dfs.append(pd.read_csv(csv))
-            self._files = dfs
         merged_df = pd.concat(self._files, axis=1, sort=False).fillna(value=0)
         merged_df.columns = [x for x in self._csv_names]
-        merged_df['total_occurences'] = merged_df.sum(axis=1) 
+        if self.totals:
+            merged_df['total_occurences'] = merged_df.sum(axis=1) 
         merged_df.reset_index(inplace=True)
         merged_df.rename(columns={'index':'sequence', '0':'index'}, inplace=True)
         self._df = merged_df
@@ -48,4 +44,3 @@ class SequenceMerger():
         name: optional parameter to give merged CSV a specific name
         '''
         self._df.to_csv(self._path + name + '.csv')
-

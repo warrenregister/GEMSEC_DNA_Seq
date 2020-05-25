@@ -16,7 +16,6 @@ class EntropyPlotter():
         Initiates entropy_plotter with a list of datasets in self._sets and
         empty dictionaries for each set within both self._data and 
         self._total_entropy
-
         datasets: a list of all sets to be analyzed
         '''
         self._sets = datasets
@@ -46,7 +45,6 @@ class EntropyPlotter():
         '''
         Returns a list of representative names for a list of the different
         filtered combinations of washes for a set's washes.
-
         wash_combs: list of filtered combinations of a set's washes
         '''
         curname = 'w'
@@ -69,7 +67,7 @@ class EntropyPlotter():
 
         for dataset in self._data.keys():
             for wash_comb in self._data[dataset].keys():
-                self._total_entropy[dataset][wash_comb] = self._entropy_function(
+                self._total_entropy[dataset][wash_comb] = self.entropy_function(
                         self.generate_matrices(
                         self._data[dataset][wash_comb])).sum()/12
     
@@ -90,7 +88,6 @@ class EntropyPlotter():
         then those only in both wash 1 and 2, on until we only see peptides
         which were present in all washes and the eluate. Finally, peptides only present
         in eluate are added as the last dataset.
-
         a_set: A dataframe containing all washes and the eluate from a set
         sampled: a boolean which determines whether to use random samples from 
         each dataset so that they are all the same size.
@@ -102,25 +99,26 @@ class EntropyPlotter():
             washes.append(columns[index])
             index += 1
         washes.append('eluate')
-        start_point = a_set.loc[a_set[washes[0]] > 0]
-        filtered_datasets = [start_point]
+        filtered_datasets = [a_set]
         min_size = len(a_set)
 
         for index, _ in enumerate(washes):
             filtered_datasets[index] = filtered_datasets[index].loc[
                 filtered_datasets[index][washes[index]] > 0]
-            filtered_datasets.append(filtered_datasets[index])
-            for wash in washes[index + 1:]: 
-                filtered_datasets[index] = filtered_datasets[index].loc[
-                    filtered_datasets[index][wash] == 0]
+            if (index + 1) < len(washes):
+                filtered_datasets.append(filtered_datasets[index])
+                for wash in washes[index + 1:]: 
+                    filtered_datasets[index] = filtered_datasets[index].loc[
+                        filtered_datasets[index][wash] == 0]
             size = len(filtered_datasets[index].index)
             if size < min_size:
                 min_size = size
 
-        only_in_eluate = a_set.loc[a_set[washes[0]] == 0]
-        for wash in washes[:-1]: 
-            only_in_eluate = only_in_eluate.loc[only_in_eluate[wash] == 0]
-        filtered_datasets[-1] = (only_in_eluate.loc[a_set['eluate'] > 0])
+        if washes[0] != 'eluate':
+            only_in_eluate = a_set.loc[a_set[washes[0]] == 0]
+            for wash in washes[:-1]: 
+                only_in_eluate = only_in_eluate.loc[only_in_eluate[wash] == 0]
+            filtered_datasets[-1] = (only_in_eluate.loc[a_set['eluate'] > 0])
 
         return (filtered_datasets, min_size)
     
@@ -130,7 +128,6 @@ class EntropyPlotter():
         '''
         Randomly samples datasets so that an equal number of samples are taken
         from each for analysis and graphing. Returns new datasets of equal size.
-
         filtered_datasets: a list of filtered datasets
         n: size of the smalles dataset in filtered_datasets
         '''
@@ -150,18 +147,19 @@ class EntropyPlotter():
         location in a peptide sequence.
         seq: A sequence of 36 nucleotides or 12 amino acids to encode
         '''
-        if len(seq) > 12:
-            seq = translate(seq)
-        if '_' not in seq:
-            aa = "RHKDESTNQCGPAVILMFYW"
-            c2i = dict((c,i) for i,c in enumerate(aa))
-            int_encoded = [c2i[char] for char in seq]
-            onehot_encoded = list()
-            for value in int_encoded:
-                letter = [0 for _ in range(20)]
-                letter[value] = 1
-                onehot_encoded.append(letter)
-            return(np.matrix(onehot_encoded))
+        if 'N' not in seq:
+            if len(seq) > 12:
+                seq = translate(seq)
+            if '_' not in seq:
+                aa = "RHKDESTNQCGPAVILMFYW"
+                c2i = dict((c,i) for i,c in enumerate(aa))
+                int_encoded = [c2i[char] for char in seq]
+                onehot_encoded = list()
+                for value in int_encoded:
+                    letter = [0 for _ in range(20)]
+                    letter[value] = 1
+                    onehot_encoded.append(letter)
+                return(np.matrix(onehot_encoded))
         return 0
 
 
@@ -188,7 +186,6 @@ class EntropyPlotter():
         Calculates the shannon entropy for a matrix representing the
         distribution of amino acids across a dataset of peptide
         sequences. Returns the information entropy for the given matrix.
-
         matrix: a 12x20 matrix representing the distributions of the 20
         amino acids across a dataset of 12 amino acid length peptides.
         '''
@@ -203,7 +200,6 @@ class EntropyPlotter():
     def plot1(self, ent:dict, title:str):
         '''
         Plots a bar graph for each set for entropy across washes
-
         ent: Dictionary containing Information Entropy within each 
         wash of each set.
         title: name to save graph under
@@ -222,7 +218,6 @@ class EntropyPlotter():
     def plot2(self, ent:dict, title:str):
         '''
         Averages entropy across sets and plots across washes
-
         ent: Dictionary containing Information Entropy within each 
         wash of each set.
         title: name to save graph under
